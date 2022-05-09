@@ -15,6 +15,7 @@ async function run() {
     try {
         await client.connect()
         const productcollection = client.db("WareHouse").collection("product")
+        const OrderDetails = client.db("WareHouse").collection("OrderList")
         app.get("/Service", async (req, res) => {
             const querry = {};
             const cursor = productcollection.find(querry)
@@ -30,6 +31,20 @@ async function run() {
             res.send(product)
 
         })
+
+
+        app.get('/order/:email', async (req, res) => {
+            const email = req.params.email
+            console.log("This is order/email", email)
+            const querry ={user:email}
+            const result= await OrderDetails.findOne(querry)
+            console.log(result)
+            res.send(result)
+
+        })
+
+
+
         app.put("/update/:_id", async (req, res) => {
             const id = req.params._id;
             const updatedata = req.body;
@@ -46,9 +61,27 @@ async function run() {
             const result = await productcollection.updateOne(filter, updateDoc, option)
             res.send(result)
         })
+        app.put("/profile", async (req, res) => {
+            const order = req.body.orders;
+            const user = req.body.user;
+            // console.log(user, order)
+            const filter = { user: user }
+            const option = { upsert: true }
+            const updatedoc = {
+                $set: {
+                    user: user,
+                    order: order
+
+                }
+            }
+            const result = await OrderDetails.updateOne(filter, updatedoc, option)
+            res.send(result)
+
+        })
+
         app.put('/manage', async (req, res) => {
-            const { _id,quantity,Carmake,img } = req.body;
-            console.log(_id," ",quantity," ",Carmake,img)
+            const { _id, quantity, Carmake, img } = req.body;
+            console.log(_id, " ", quantity, " ", Carmake, img)
             const filter = { _id: ObjectId(_id) }
             // console.log(filter)
             const product = await productcollection.findOne(filter)
@@ -56,17 +89,17 @@ async function run() {
             // console.log(product)
             // const a=parseInt(product.quantity)
             // const b=a-1;
-           
-             
+
+
             const updatedoc = {
                 $set: {
                     Carmake: Carmake,
                     img: img,
-                    quantity: quantity 
+                    quantity: quantity
                 }
             }
             const result = await productcollection.updateOne(filter, updatedoc, option)
-            console.log(result)
+            // console.log(result)
             res.send(result)
         })
 
