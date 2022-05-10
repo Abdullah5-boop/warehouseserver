@@ -31,10 +31,10 @@ async function run() {
             res.send(product)
 
         })
-        app.delete('/update/:_id',async(req,res)=>{
-            const id =req.params._id;
-            const querry ={_id:ObjectId(id)};
-            const result =await productcollection.deleteOne(querry)
+        app.delete('/update/:_id', async (req, res) => {
+            const id = req.params._id;
+            const querry = { _id: ObjectId(id) };
+            const result = await productcollection.deleteOne(querry)
             res.send(result)
         })
 
@@ -42,8 +42,8 @@ async function run() {
         app.get('/order/:email', async (req, res) => {
             const email = req.params.email
             console.log("This is order/email", email)
-            const querry ={user:email}
-            const result= await OrderDetails.findOne(querry)
+            const querry = { user: email }
+            const result = await OrderDetails.findOne(querry)
             console.log(result)
             res.send(result)
 
@@ -120,7 +120,9 @@ run().catch(console.dir)
 
 
 
-
+app.get('/', (req, res) => {
+    res.send("running server warehouse")
+})
 
 app.listen(port, () => {
     console.log("Assingment is runnig on ", port)
