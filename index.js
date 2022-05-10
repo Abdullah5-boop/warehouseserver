@@ -121,7 +121,7 @@ run().catch(console.dir)
 
 
 app.get('/', (req, res) => {
-    res.send("running server warehouse")
+    res.send("running server warehouse in heroku")
 })
 
 app.listen(port, () => {
